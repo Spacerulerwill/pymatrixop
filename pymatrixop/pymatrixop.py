@@ -12,10 +12,12 @@ class Matrix():
     #matrix accessing
     #get MatrixRow
     def __getitem__(self, index: int) -> list:
+        if index < 1: raise Exception("Index must be greater than 1!")
         return self.matrix[index-1]
 
     #set matrix row
     def __setitem__(self, index, value):
+        if index < 1: raise Exception("Index must be greater than 1!")
         if value == None: return
         if not (isinstance(value, list) or isinstance(value, MatrixRow)): raise Exception("Value must be either list or MatrixRow object")
         
@@ -101,6 +103,7 @@ class MatrixRow():
         return len(self.row)
 
     def __getitem__(self, index):
+        if index < 1: raise Exception("Index must be greater than 1!")
         return self.row[index-1]
 
     #row operations
@@ -115,6 +118,27 @@ class MatrixRow():
 
         self.row = [self.row[x] + other[x] for x in range(len(self.row))]
 
+    def __radd__(self, other):
+        self.__add__(other)
+
+    def __sub__(self, other):
+        #must be either list or MatrixRow object
+        if not (isinstance(other, list) or isinstance(other, MatrixRow)): raise Exception("Other must be either list or MatrixRow object")
+        
+        #must be same length
+        if not len(self.row) == len(other): raise Exception("Rows must be equal length!")
+
+        self.row = [self.row[x] - other[x] for x in range(len(self.row))]
+
+    def __rsub__(self, other):
+        #must be either list or MatrixRow object
+        if not (isinstance(other, list) or isinstance(other, MatrixRow)): raise Exception("Other must be either list or MatrixRow object")
+        
+        #must be same length
+        if not len(self.row) == len(other): raise Exception("Rows must be equal length!")
+
+        self.row = [other[x] - self.row[x] for x in range(len(self.row))]
+
     #row multiplication
     def __mul__(self, other):
         #if other is an integer or float
@@ -125,3 +149,13 @@ class MatrixRow():
 
     def __rmul__(self, other):
         self.__mul__(other)
+
+if __name__ == "__main__":
+    matrix = Matrix([
+        [1,2],
+        [2,1]
+    ])
+
+    matrix[1] = [1,4] - matrix[1]
+
+    print(matrix)

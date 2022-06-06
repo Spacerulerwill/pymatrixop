@@ -3,9 +3,7 @@ class Matrix():
         #check square
         if all (len (row) == len (matrix[0]) for row in matrix):
             #convert rows to matrix row class (for row operations)
-            self.matrix = []
-            for row in matrix:
-                self.matrix.append(MatrixRow(row=row))
+            self.matrix = [MatrixRow(row=row) for row in matrix]
         else:
             raise Exception("Matrix must be square!")
 
